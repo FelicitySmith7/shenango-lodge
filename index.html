@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shenango Lodge — A Peninsula at the Edge of Everything</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: #1a3a2a;
+            background-color: #e8e2d6;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.15;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.6s ease;
+        }
+
+        nav.scrolled {
+            background: #e8e2d6;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c4952a;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #e8e2d6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        nav.scrolled .nav-links a {
+            color: #1a3a2a;
+        }
+
+        .nav-links a:hover {
+            color: #c4952a;
+        }
+
+        .nav-links .nav-cta {
+            background: #c4952a;
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links .nav-cta:hover {
+            background: #a87d22;
+            color: #fff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2.5px;
+            background: #e8e2d6;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .hamburger span {
+            background: #1a3a2a;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #1a3a2a;
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .nav-menu a {
+            color: #e8e2d6;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #c4952a;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('img/shenango-05-silhouette-dusk.jpg') center/cover;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 58, 42, 0.45);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #e8e2d6;
+        }
+
+        .hero h1 {
+            color: #c4952a;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            animation: heroFadeIn 1.2s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            animation: heroFadeIn 1.2s ease-out 0.3s both;
+        }
+
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 40px;
+            stroke: #e8e2d6;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+            50% { transform: translateX(-50%) translateY(8px); opacity: 1; }
+        }
+
+        /* ===== EDITORIAL INTRO ===== */
+        .editorial-intro {
+            padding: 8rem 3rem;
+            background: #e8e2d6;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .editorial-left {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            line-height: 1.2;
+            color: #1a3a2a;
+            font-weight: 400;
+        }
+
+        .editorial-left .word {
+            display: inline;
+            opacity: 0.3;
+            transition: opacity 0.3s ease;
+        }
+
+        .editorial-right {
+            font-size: 1.05rem;
+            color: #1a3a2a;
+            line-height: 1.9;
+        }
+
+        .editorial-right p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ===== CINEMATIC PHOTO BAND ===== */
+        .photo-band {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: url('img/shenango-02-canoes-dusk.jpg') center/cover;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        .photo-band::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, rgba(26, 58, 42, 0.7));
+            z-index: 2;
+        }
+
+        .photo-caption {
+            position: absolute;
+            bottom: 2rem;
+            left: 3rem;
+            right: 3rem;
+            z-index: 3;
+            color: #e8e2d6;
+            font-size: 1.1rem;
+            font-style: italic;
+        }
+
+        /* ===== THE STORY SECTION ===== */
+        .story-section {
+            padding: 8rem 3rem;
+            background: #e8e2d6;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .story-prose {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .story-prose p {
+            font-size: 1.1rem;
+            color: #1a3a2a;
+            margin-bottom: 2rem;
+        }
+
+        .story-prose p:first-child::first-letter {
+            font-size: 3rem;
+            font-weight: 700;
+            float: left;
+            line-height: 2.5rem;
+            margin-right: 0.2rem;
+            color: #c4952a;
+        }
+
+        .story-photos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .film-slide {
+            position: relative;
+            background: #e8e2d6;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transform: rotate(-2deg);
+            transition: transform 0.4s ease;
+        }
+
+        .film-slide:nth-child(2) {
+            transform: rotate(2deg);
+        }
+
+        .film-slide:hover {
+            transform: rotate(-2deg) translateY(-5px);
+        }
+
+        .film-slide:nth-child(2):hover {
+            transform: rotate(2deg) translateY(-5px);
+        }
+
+        .film-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .film-code {
+            margin-top: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: #1a3a2a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .film-caption {
+            margin-top: 8px;
+            font-size: 0.95rem;
+            color: #1a3a2a;
+            font-style: italic;
+        }
+
+        /* ===== MASSIVE TEXT INTERLUDE ===== */
+        .text-interlude {
+            padding: 6rem 3rem;
+            background: #e8e2d6;
+            text-align: center;
+        }
+
+        .interlude-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 7vw, 5rem);
+            font-weight: 700;
+            color: #1a3a2a;
+            line-height: 1.3;
+            letter-spacing: -1px;
+        }
+
+        .interlude-text .word {
+            display: inline-block;
+            opacity: 0.2;
+            transition: opacity 0.5s ease;
+            margin: 0 0.3em;
+        }
+
+        /* ===== CABINS SECTION ===== */
+        .cabins-section {
+            padding: 3rem 3rem 2.5rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+            text-align: center;
+        }
+
+        .cabins-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: #c4952a;
+        }
+
+        .cabins-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            padding-bottom: 0;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(232, 226, 214, 0.8);
+        }
+
+        .cabins-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .cabin-card {
+            padding: 1.5rem;
+            border: 1px solid rgba(196, 149, 42, 0.3);
+            background: rgba(232, 226, 214, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .cabin-card:hover {
+            border-color: #c4952a;
+            background: rgba(196, 149, 42, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .cabin-card h3 {
+            color: #c4952a;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .cabin-capacity {
+            font-size: 0.9rem;
+            color: #c4952a;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cabin-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #e8e2d6;
+        }
+
+        /* ===== ANOTHER CINEMATIC PHOTO ===== */
+        .photo-band-2 {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            background: url('https://images.pexels.com/photos/32274841/pexels-photo-32274841.jpeg?auto=compress&cs=tinysrgb&w=1600') center/cover;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        .photo-band-2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, rgba(26, 58, 42, 0.2));
+            z-index: 2;
+        }
+
+        /* ===== ACTIVITIES SECTION ===== */
+        .activities-section {
+            padding: 8rem 3rem;
+            background: #e8e2d6;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .activities-photos {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .activity-slide {
+            position: relative;
+            background: #e8e2d6;
+            padding: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transform: rotate(-1.5deg);
+        }
+
+        .activity-slide:nth-child(2) {
+            transform: rotate(1.5deg);
+            align-self: flex-end;
+        }
+
+        .activity-slide img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .activity-slide .film-code {
+            margin-top: 10px;
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .activity-item {
+            /* opacity animated by GSAP */
+        }
+
+        .activity-item h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: #1a3a2a;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-item p {
+            font-size: 0.95rem;
+            color: #1a3a2a;
+            margin-bottom: 0;
+        }
+
+        /* ===== HOW TO GET HERE ===== */
+        .get-here-section {
+            padding: 6rem 3rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .get-here-section h2 {
+            color: #c4952a;
+            margin-bottom: 2rem;
+        }
+
+        .get-here-section p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .coordinates {
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #c4952a;
+            letter-spacing: 1px;
+        }
+
+        /* ===== BOOKING FORM ===== */
+        .booking-section {
+            padding: 8rem 3rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+        }
+
+        .booking-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .booking-section h2 {
+            color: #c4952a;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: formSlideIn 0.6s ease forwards;
+        }
+
+        @keyframes formSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        .form-group:nth-child(7) { animation-delay: 0.7s; }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #e8e2d6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(232, 226, 214, 0.1);
+            border: 1px solid rgba(196, 149, 42, 0.3);
+            color: #e8e2d6;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(232, 226, 214, 0.5);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #c4952a;
+            background: rgba(232, 226, 214, 0.15);
+            box-shadow: 0 0 0 3px rgba(196, 149, 42, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-submit {
+            background: #c4952a;
+            color: #1a3a2a;
+            padding: 1rem 3rem;
+            border: none;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            width: 100%;
+            text-transform: uppercase;
+            margin-top: 1rem;
+        }
+
+        .form-submit:hover {
+            background: #e8b84a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(196, 149, 42, 0.3);
+        }
+
+        .form-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 4px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .form-message.success {
+            background: rgba(132, 204, 22, 0.2);
+            color: #84cc16;
+            display: block;
+        }
+
+        .form-message.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            display: block;
+        }
+
+        /* ===== PRICING SECTION ===== */
+        .pricing-section {
+            padding: 8rem 3rem;
+            background: #e8e2d6;
+            text-align: center;
+        }
+
+        .pricing-section h2 {
+            color: #1a3a2a;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-intro {
+            max-width: 650px;
+            margin: 0 auto 4rem;
+            color: #1a3a2a;
+            opacity: 0.8;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .price-card {
+            padding: 3rem 2rem;
+            border: 1px solid rgba(26, 58, 42, 0.15);
+            background: rgba(255,255,255,0.3);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .price-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(26, 58, 42, 0.1);
+        }
+
+        .price-card.featured {
+            border-color: #c4952a;
+            background: rgba(196, 149, 42, 0.08);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #c4952a;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0.3rem 1rem;
+        }
+
+        .price-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: #1a3a2a;
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-season {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(26, 58, 42, 0.6);
+            margin-bottom: 1.5rem;
+        }
+
+        .price-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a3a2a;
+            margin-bottom: 1rem;
+        }
+
+        .price-amount span {
+            font-size: 0.9rem;
+            font-family: 'Source Sans 3', sans-serif;
+            font-weight: 300;
+        }
+
+        .price-card p {
+            font-size: 0.9rem;
+            color: rgba(26, 58, 42, 0.7);
+            margin: 0;
+        }
+
+        /* ===== PAYMENT & BOOKING EXTRAS ===== */
+        .booking-subtitle {
+            text-align: center;
+            color: rgba(232, 226, 214, 0.7);
+            margin-bottom: 2.5rem;
+            font-size: 1rem;
+        }
+
+        .price-estimate {
+            background: rgba(196, 149, 42, 0.1);
+            border: 1px solid rgba(196, 149, 42, 0.3);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .estimate-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+            color: rgba(232, 226, 214, 0.8);
+        }
+
+        .estimate-total {
+            border-top: 1px solid rgba(196, 149, 42, 0.3);
+            margin-top: 0.5rem;
+            padding-top: 0.8rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #e8e2d6;
+        }
+
+        .estimate-deposit {
+            color: #c4952a;
+            font-weight: 700;
+            font-size: 1.15rem;
+        }
+
+        .payment-summary {
+            background: rgba(232, 226, 214, 0.08);
+            border: 1px solid rgba(196, 149, 42, 0.2);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+
+        .payment-badge {
+            text-align: center;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(232, 226, 214, 0.5);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(196, 149, 42, 0.15);
+        }
+
+        .form-back {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 0.75rem;
+            background: transparent;
+            border: 1px solid rgba(232, 226, 214, 0.3);
+            color: #e8e2d6;
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-back:hover {
+            border-color: #c4952a;
+            color: #c4952a;
+        }
+
+        .payment-note {
+            font-size: 0.8rem;
+            color: rgba(232, 226, 214, 0.5);
+            text-align: center;
+            margin-top: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: rgba(132, 204, 22, 0.15);
+            color: #84cc16;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .confirmation-text {
+            text-align: center;
+            color: rgba(232, 226, 214, 0.8);
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .confirmation-details {
+            background: rgba(232, 226, 214, 0.08);
+            border: 1px solid rgba(196, 149, 42, 0.2);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 2;
+            font-size: 0.95rem;
+        }
+
+        .confirmation-note {
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(232, 226, 214, 0.6);
+        }
+
+        .confirmation-note a {
+            color: #c4952a;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 6rem 3rem 3rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+            text-align: center;
+            border-top: 1px solid rgba(196, 149, 42, 0.2);
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px #c4952a;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-col h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #c4952a;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
+            color: #e8e2d6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: #c4952a;
+        }
+
+        .footer-copyright {
+            font-size: 0.85rem;
+            color: rgba(232, 226, 214, 0.6);
+            border-top: 1px solid rgba(196, 149, 42, 0.2);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* ===== SVG RIVER LINE ===== */
+        svg.river-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            .editorial-intro, .activities-section {
+                grid-template-columns: 1fr;
+                padding: 4rem 1.5rem;
+                gap: 2rem;
+            }
+
+            .story-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .story-photos {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .text-interlude {
+                padding: 4rem 1.5rem;
+            }
+
+            .interlude-text {
+                font-size: 2rem;
+            }
+
+            .cabins-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .cabins-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .get-here-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .photo-caption {
+                font-size: 0.95rem;
+                left: 1.5rem;
+                right: 1.5rem;
+            }
+
+            .footer-brand {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- SVG River Line -->
+    <svg class="river-line" id="riverLine" viewBox="0 0 100 10000" preserveAspectRatio="none">
+        <path id="riverPath" d="" stroke="#1a3a2a" stroke-width="1.5" fill="none" opacity="0.3"/>
+    </svg>
+
+    <!-- Navigation -->
+    <nav id="mainNav">
+        <a href="#" class="nav-brand">SHENANGO</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="cabins.html">Cabins</a>
+            <a href="activities.html">Activities</a>
+            <a href="contact.html">Contact</a>
+
+            <a href="book.html" class="nav-cta">Book Your Stay</a>
+        </div>
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <div class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="cabins.html">Cabins</a>
+        <a href="activities.html">Activities</a>
+        <a href="contact.html">Contact</a>
+        <a href="book.html">Book Your Stay</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>SHENANGO LODGE</h1>
+            <p class="subtitle">Shenango Lake's #1 premier fishing & hunting lodge.</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 40">
+                <path d="M12 2v20M12 30v8M6 18l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Editorial Intro -->
+    <section class="editorial-intro">
+        <div class="editorial-left">
+            <div class="word">WHERE</div>
+            <div class="word">THE</div>
+            <div class="word">ROADS</div>
+            <div class="word">END</div>
+        </div>
+        <div class="editorial-right">
+            <p>Shenango Lodge is a remote fishing and hunting lodge on a peninsula in Lake Shenango, near Foleyet, Ontario. Off-grid and solar powered, accessible by seaplane.</p>
+            <p>Four cabins. One lodge. No cell signal. No hurry. Just wilderness.</p>
+        </div>
+    </section>
+
+    <!-- Cinematic Photo Band 1 -->
+    <section class="photo-band">
+        <div class="photo-caption">End of another good day on the water. This is what you come here for.</div>
+    </section>
+
+    <!-- The Story Section -->
+    <section class="story-section" id="story">
+        <div class="story-prose">
+            <p>Shenango Lodge sits on a peninsula in Lake Shenango, near Foleyet in Northern Ontario. The lodge is completely off-grid — solar powered with four guest cabins.</p>
+            <p>Walleye and northern pike fishing. Hunting opportunities in season. The lodge provides everything you need for your stay.</p>
+            <p>Contact us to learn more and plan your trip.</p>
+        </div>
+        <div class="story-photos">
+            <div class="film-slide">
+                <img src="img/shenango-06-lodge-sign-dock.jpg" alt="Shenango Lodge sign">
+                <div class="film-code">00247_03</div>
+                <div class="film-caption">The entry point. Welcome to the peninsula.</div>
+            </div>
+            <div class="film-slide">
+                <img src="img/shenango-sunset-new.jpg" alt="Sunset over Lake Shenango">
+                <div class="film-code">00312_07</div>
+                <div class="film-caption">Sunset over Lake Shenango. Worth the trip alone.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Massive Text Interlude -->
+    <section class="text-interlude">
+        <div class="interlude-text">
+            <div class="word">ONE</div>
+            <div class="word">LAKE.</div>
+            <div class="word">FOUR</div>
+            <div class="word">CABINS.</div>
+            <div class="word">ONE</div>
+            <div class="word">PENINSULA.</div>
+        </div>
+    </section>
+
+    <!-- Cabins Section -->
+    <section class="cabins-section" id="cabins" style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: auto;">
+        <h2 class="cabins-title">Your Home on the Water</h2>
+        <p class="cabins-intro" style="margin-bottom: 0;">Four cabins on the peninsula, each with its own character and view. Solar-powered, wood-stove heated, and built to weather the Ontario seasons. Every cabin has lake access, propane kitchen, and bedding provided. Shared sauna and showers at the main lodge.</p>
+    </section>
+
+    <!-- Cinematic Photo Band 2 -->
+    <section class="photo-band-2"></section>
+
+    <!-- Activities Section -->
+    <section class="activities-section" id="activities">
+        <div class="activities-photos">
+            <div class="activity-slide">
+                <img src="img/shenango-09-fishing-catch.jpg" alt="Fishing">
+                <div class="film-code">00189_02</div>
+            </div>
+            <div class="activity-slide">
+                <img src="img/shenango-03-golden-sunset.jpg" alt="Golden sunset">
+                <div class="film-code">00425_01</div>
+            </div>
+        </div>
+        <div class="activities-list">
+            <div class="activity-item">
+                <h4>Fishing</h4>
+                <p>Walleye and northern pike. The lake is generous with those who know where to look. Guides available.</p>
+            </div>
+            <div class="activity-item">
+                <h4>Canoeing</h4>
+                <p>Several lakes to paddle and explore. Each one different. Pack a lunch and spend the day out there.</p>
+            </div>
+            <div class="activity-item">
+                <h4>Wildlife</h4>
+                <p>Moose, bears, eagles, loons — they're all out here. Dawn and dusk are your best bet for spotting them.</p>
+            </div>
+            <div class="activity-item">
+                <h4>Hiking</h4>
+                <p>Trails through old-growth forest. Plenty to explore on foot around the peninsula and beyond.</p>
+            </div>
+            <div class="activity-item">
+                <h4>Sauna & Swim</h4>
+                <p>Wind down after a long day. Our 12x23 sauna and shower building is available for all guests.</p>
+            </div>
+            <div class="activity-item">
+                <h4>Stargazing</h4>
+                <p>No light pollution. Zero light pollution out here. You won't believe the sky.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Get Here -->
+    <section class="get-here-section">
+        <h2>How to Get Here</h2>
+        <p>Shenango Lodge is located on a peninsula in Lake Shenango, near Foleyet, Ontario. The lodge is remote and accessible by seaplane.</p>
+        <p>Contact us to plan your trip and we'll help you arrange transport to the lodge.</p>
+        <p><a href="mailto:shenangolodge@hotmail.com" style="color:#c4952a;">shenangolodge@hotmail.com</a> · <a href="tel:+15704304933" style="color:#c4952a;">(570) 430-4933</a></p>
+        <div class="coordinates">
+            Lake Shenango • Foleyet, Ontario
+        </div>
+    </section>
+
+    <!-- Rates & Booking — Coming Soon -->
+    <section class="booking-section" id="booking">
+        <div class="booking-container">
+            <div style="background: #fff; border-radius: 16px; padding: 4rem 2.5rem; max-width: 900px; margin: 0 auto; box-shadow: 0 8px 40px rgba(0,0,0,0.15); text-align: center;">
+                <h2 style="color: #1a3a2a; margin-bottom: 0.5rem;">Rates & Booking</h2>
+                <p style="color: #c4952a; font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem;">Coming Soon</p>
+                <p style="color: #666; font-size: 1rem; max-width: 500px; margin: 0 auto 2rem;">Our online booking system and pricing are being finalized. Contact us directly to inquire about availability and rates.</p>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+                    <a href="mailto:shenangolodge@hotmail.com" style="display: inline-block; background: #1a3a2a; color: #fff; padding: 0.8rem 2rem; text-decoration: none; border-radius: 6px; font-weight: 600; font-family: 'Source Sans 3', sans-serif;">Email Us</a>
+                    <a href="tel:+15704304933" style="color: #c4952a; font-size: 1rem; text-decoration: none; font-weight: 600;">(570) 430-4933</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-brand">SHENANGO</div>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p><a href="mailto:shenangolodge@hotmail.com">shenangolodge@hotmail.com</a></p>
+                <p><a href="tel:+15704304933">(570) 430-4933</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Location</h4>
+                <p>Lake Shenango<br>Near Foleyet, Ontario<br>Canada</p>
+            </div>
+            <div class="footer-col">
+                <h4>Follow</h4>
+                <p><a href="https://www.facebook.com/profile.php?id=100048133515510" target="_blank">Facebook</a></p>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            © 2026 Shenango Lodge. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Enable GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ===== NAVIGATION =====
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const mainNav = document.getElementById('mainNav');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Nav background on scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight * 0.5) {
+                mainNav.classList.add('scrolled');
+            } else {
+                mainNav.classList.remove('scrolled');
+            }
+        });
+
+        // ===== HERO PARALLAX =====
+        gsap.to('.hero', {
+            backgroundPosition: '50% 30%',
+            scrollTrigger: {
+                trigger: '.hero',
+                scrub: 1,
+                markers: false
+            }
+        });
+
+        // ===== EDITORIAL WORD REVEAL =====
+        const editorialWords = document.querySelectorAll('.editorial-left .word');
+        editorialWords.forEach((word, index) => {
+            gsap.to(word, {
+                opacity: 1,
+                duration: 0.3,
+                scrollTrigger: {
+                    trigger: '.editorial-intro',
+                    start: `top+=${index * 60} 70%`,
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // ===== PHOTO PARALLAX =====
+        gsap.to('.photo-band', {
+            backgroundPosition: '50% 60%',
+            scrollTrigger: {
+                trigger: '.photo-band',
+                scrub: 1
+            }
+        });
+
+        gsap.to('.photo-band-2', {
+            backgroundPosition: '50% 60%',
+            scrollTrigger: {
+                trigger: '.photo-band-2',
+                scrub: 1
+            }
+        });
+
+        // ===== FILM SLIDE ANIMATIONS =====
+        const filmSlides = document.querySelectorAll('.film-slide');
+        filmSlides.forEach((slide, index) => {
+            gsap.from(slide, {
+                opacity: 0,
+                y: 30,
+                scrollTrigger: {
+                    trigger: slide,
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                },
+                duration: 0.8
+            });
+        });
+
+        // ===== INTERLUDE TEXT REVEAL =====
+        const interludeWords = document.querySelectorAll('.interlude-text .word');
+        interludeWords.forEach((word, index) => {
+            gsap.to(word, {
+                opacity: 1,
+                duration: 0.3,
+                scrollTrigger: {
+                    trigger: '.text-interlude',
+                    start: `top+=${index * 50} 65%`,
+                    toggleActions: 'play none none none'
+                }
+            });
+        });
+
+        // ===== CABIN CARDS STAGGER =====
+        gsap.from('.cabin-card', {
+            opacity: 0,
+            y: 40,
+            stagger: 0.15,
+            scrollTrigger: {
+                trigger: '.cabins-grid',
+                start: 'top 70%',
+                toggleActions: 'play none none none'
+            },
+            duration: 0.8
+        });
+
+        // ===== ACTIVITY ITEMS FADE IN =====
+        gsap.from('.activity-item', {
+            opacity: 0,
+            y: 20,
+            stagger: 0.12,
+            duration: 0.5,
+            scrollTrigger: {
+                trigger: '.activities-list',
+                start: 'top 75%',
+                toggleActions: 'play none none none'
+            }
+        });
+
+        // ===== SVG RIVER LINE =====
+        const riverPath = document.getElementById('riverPath');
+        const riverLine = document.getElementById('riverLine');
+
+        // Generate smooth organic winding path using cubic bezier curves
+        function generateRiverPath() {
+            const pts = [];
+            const amp = 18;
+            const totalH = 10000;
+            const step = 200;
+            for (let y = 0; y <= totalH; y += step) {
+                const x = 50 + Math.sin(y * 0.0015) * amp + Math.sin(y * 0.004) * (amp * 0.4);
+                pts.push({ x, y });
+            }
+            let d = `M ${pts[0].x},${pts[0].y}`;
+            for (let i = 0; i < pts.length - 1; i++) {
+                const p0 = pts[i];
+                const p1 = pts[i + 1];
+                const cy1 = p0.y + step * 0.4;
+                const cy2 = p1.y - step * 0.4;
+                d += ` C ${p0.x},${cy1} ${p1.x},${cy2} ${p1.x},${p1.y}`;
+            }
+            return d;
+        }
+
+        riverPath.setAttribute('d', generateRiverPath());
+
+        // Animate river line on scroll
+        gsap.to(riverPath, {
+            strokeDashoffset: 0,
+            scrollTrigger: {
+                trigger: 'body',
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 0.5,
+                markers: false
+            }
+        });
+
+        // Set initial stroke-dasharray
+        riverPath.setAttribute('stroke-dasharray', riverPath.getTotalLength());
+        riverPath.setAttribute('stroke-dashoffset', riverPath.getTotalLength());
+
+        // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        gsap.to(window, {
+                            duration: 0.8,
+                            scrollTo: {
+                                y: target,
+                                offsetY: 80
+                            },
+                            ease: 'power2.inOut'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
