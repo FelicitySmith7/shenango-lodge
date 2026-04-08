@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabins — Shenango Lodge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            color: #1a3a2a;
+            background-color: #e8e2d6;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1.15;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 3rem;
+            z-index: 1000;
+            background: transparent;
+            transition: background 0.6s ease;
+        }
+
+        nav.scrolled {
+            background: #e8e2d6;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c4952a;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #e8e2d6;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        nav.scrolled .nav-links a {
+            color: #1a3a2a;
+        }
+
+        .nav-links a:hover {
+            color: #c4952a;
+        }
+
+        .nav-links .nav-cta {
+            background: #c4952a;
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+        }
+
+        .nav-links .nav-cta:hover {
+            background: #a87d22;
+            color: #fff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2.5px;
+            background: #e8e2d6;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled .hamburger span {
+            background: #1a3a2a;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #1a3a2a;
+            z-index: 999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-menu.active {
+            display: flex;
+        }
+
+        .nav-menu a {
+            color: #e8e2d6;
+            text-decoration: none;
+            font-size: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #c4952a;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: url('img/shenango-10-cabins-lakeside.jpg') center/cover;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(26, 58, 42, 0.4);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #e8e2d6;
+            margin-top: 80px;
+        }
+
+        .hero h1 {
+            color: #e8e2d6;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #e8e2d6;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 40px;
+            stroke: #e8e2d6;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        /* ===== INTRO SECTION ===== */
+        .cabins-intro {
+            padding: 6rem 3rem;
+            background: #e8e2d6;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cabins-intro h2 {
+            color: #1a3a2a;
+            margin-bottom: 2rem;
+        }
+
+        .cabins-intro p {
+            font-size: 1.1rem;
+            color: #1a3a2a;
+            margin-bottom: 2rem;
+            line-height: 1.9;
+        }
+
+        /* ===== CABIN CARDS SECTION ===== */
+        .cabins-section {
+            padding: 4rem 3rem;
+            background: #e8e2d6;
+        }
+
+        .cabin-card {
+            background: #1a3a2a;
+            color: #e8e2d6;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cabin-card:nth-child(even) {
+            direction: rtl;
+        }
+
+        .cabin-card:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .cabin-card h3 {
+            color: #c4952a;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cabin-card p {
+            color: #e8e2d6;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .cabin-features {
+            list-style: none;
+            margin: 2rem 0;
+        }
+
+        .cabin-features li {
+            color: #e8e2d6;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .cabin-features li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #c4952a;
+            font-size: 1.2rem;
+        }
+
+        .cabin-image {
+            width: 100%;
+            background: linear-gradient(135deg, #2a5a4a 0%, #1a3a2a 100%);
+            height: 300px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #c4952a;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Source Sans 3', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* ===== AMENITIES SECTION ===== */
+        .amenities-section {
+            padding: 6rem 3rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+            text-align: center;
+        }
+
+        .amenities-section h2 {
+            color: #c4952a;
+            margin-bottom: 3rem;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .amenity-item {
+            padding: 2rem;
+            background: rgba(196, 149, 42, 0.1);
+            border-left: 3px solid #c4952a;
+            text-align: left;
+            border-radius: 2px;
+        }
+
+        .amenity-item h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #c4952a;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .amenity-item p {
+            font-size: 0.95rem;
+            color: #e8e2d6;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cabins-cta {
+            padding: 6rem 3rem;
+            background: #e8e2d6;
+            text-align: center;
+        }
+
+        .cabins-cta h2 {
+            color: #1a3a2a;
+            margin-bottom: 2rem;
+        }
+
+        .cabins-cta p {
+            color: #1a3a2a;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        .cta-button {
+            background: #c4952a;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            display: inline-block;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .cta-button:hover {
+            background: #a87d22;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 6rem 3rem 3rem;
+            background: #1a3a2a;
+            color: #e8e2d6;
+            text-align: center;
+            border-top: 1px solid rgba(196, 149, 42, 0.2);
+        }
+
+        .footer-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px #c4952a;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-col h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #c4952a;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-col p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
+            color: #e8e2d6;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col a:hover {
+            color: #c4952a;
+        }
+
+        .footer-copyright {
+            font-size: 0.85rem;
+            color: rgba(232, 226, 214, 0.6);
+            border-top: 1px solid rgba(196, 149, 42, 0.2);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            .cabins-intro {
+                padding: 3rem 1.5rem;
+            }
+
+            .cabins-section {
+                padding: 3rem 1.5rem;
+            }
+
+            .cabin-card {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+                direction: ltr !important;
+            }
+
+            .cabin-card:nth-child(even) {
+                direction: ltr;
+            }
+
+            .cabin-image {
+                height: 250px;
+            }
+
+            .amenities-section {
+                padding: 4rem 1.5rem;
+            }
+
+            .amenities-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .cabins-cta {
+                padding: 4rem 1.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-brand {
+                font-size: 2.5rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="mainNav" class="scrolled">
+        <a href="index.html" class="nav-brand">SHENANGO</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About Us</a>
+            <a href="cabins.html">Cabins</a>
+            <a href="activities.html">Activities</a>
+            <a href="contact.html">Contact</a>
+            <a href="book.html" class="nav-cta">Book Your Stay</a>
+        </div>
+        <button class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <div class="nav-menu" id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="cabins.html">Cabins</a>
+        <a href="activities.html">Activities</a>
+        <a href="contact.html">Contact</a>
+        <a href="book.html">Book Your Stay</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Home on the Water</h1>
+            <p class="subtitle">Four Cabins. One Peninsula. Infinite Possibilities.</p>
+        </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 40">
+                <path d="M12 2v20M12 30v8M6 18l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="cabins-intro">
+        <h2>Lakeside Sanctuaries</h2>
+        <p>
+            Four cabins on a peninsula in Lake Shenango. Each cabin runs on its own solar system
+            with solar lights and a solar fridge, plus a propane cook stove. All buildings have steel roofs.
+        </p>
+    </section>
+
+    <!-- Cabin Cards Section -->
+    <section class="cabins-section">
+        <!-- Cabin 1 -->
+        <div class="cabin-card">
+            <div class="cabin-content">
+                <h3>Cabin 1</h3>
+                <p>
+                    Each of our four cabins has been completely rebuilt and equipped for a comfortable wilderness stay.
+                    Solar-powered lighting and refrigeration, a propane cook stove, and steel roofing throughout.
+                </p>
+                <ul class="cabin-features">
+                    <li>Own solar power system</li>
+                    <li>Solar lights and solar fridge</li>
+                    <li>Propane cook stove</li>
+                    <li>Steel roof — fully rebuilt</li>
+                </ul>
+            </div>
+            <div class="cabin-image">Photos Coming Soon</div>
+        </div>
+
+        <!-- Cabin 2 -->
+        <div class="cabin-card">
+            <div class="cabin-content">
+                <h3>Cabin 2</h3>
+                <p>
+                    Set on the peninsula with lake access all around, each cabin offers the essentials for
+                    an off-grid fishing trip — a place to cook your catch, keep it cold, and sleep well after a day on the water.
+                </p>
+                <ul class="cabin-features">
+                    <li>Own solar power system</li>
+                    <li>Solar lights and solar fridge</li>
+                    <li>Propane cook stove</li>
+                    <li>Steel roof — fully rebuilt</li>
+                </ul>
+            </div>
+            <div class="cabin-image">Photos Coming Soon</div>
+        </div>
+
+        <!-- Cabin 3 -->
+        <div class="cabin-card">
+            <div class="cabin-content">
+                <h3>Cabin 3</h3>
+                <p>
+                    The camp is completely solar — no generators, no noise. Just the sounds of the lake
+                    and the bush. Every cabin is self-contained with everything you need for your stay.
+                </p>
+                <ul class="cabin-features">
+                    <li>Own solar power system</li>
+                    <li>Solar lights and solar fridge</li>
+                    <li>Propane cook stove</li>
+                    <li>Steel roof — fully rebuilt</li>
+                </ul>
+            </div>
+            <div class="cabin-image">Photos Coming Soon</div>
+        </div>
+
+        <!-- Cabin 4 -->
+        <div class="cabin-card">
+            <div class="cabin-content">
+                <h3>Cabin 4</h3>
+                <p>
+                    With the only lodge on the lake and no other camps around, every cabin at Shenango
+                    offers the kind of privacy and quiet you won't find anywhere else.
+                </p>
+                <ul class="cabin-features">
+                    <li>Own solar power system</li>
+                    <li>Solar lights and solar fridge</li>
+                    <li>Propane cook stove</li>
+                    <li>Steel roof — fully rebuilt</li>
+                </ul>
+            </div>
+            <div class="cabin-image">Photos Coming Soon</div>
+        </div>
+    </section>
+
+    <!-- Amenities Section -->
+    <section class="amenities-section">
+        <h2>Shared Comforts</h2>
+        <div class="amenities-grid">
+            <div class="amenity-item">
+                <h4>Power & Cooking</h4>
+                <p>Each cabin runs on its own solar system for lighting and refrigeration, with a propane cook stove for meals.</p>
+            </div>
+            <div class="amenity-item">
+                <h4>Sauna & Shower Building</h4>
+                <p>A sauna and shower building on the grounds provides bathing facilities for all guests.</p>
+            </div>
+            <div class="amenity-item">
+                <h4>Boats & Motors</h4>
+                <p>Boats and motors provided for guests. Contact us for details.</p>
+            </div>
+            <div class="amenity-item">
+                <h4>Steel Roofs & Solar</h4>
+                <p>All buildings have steel roofs. The camp is fully solar-powered.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cabins-cta">
+        <h2>Ready to Reserve Your Cabin?</h2>
+        <p>Select your dates, choose your home on the water, and book your Shenango experience.</p>
+        <a href="book.html" class="cta-button">Book Your Stay</a>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-brand">SHENANGO</div>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p><a href="mailto:shenangolodge@hotmail.com">shenangolodge@hotmail.com</a></p>
+                <p><a href="tel:+15704304933">(570) 430-4933</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Location</h4>
+                <p>Lake Shenango<br>Near Foleyet, Ontario<br>Canada</p>
+            </div>
+            <div class="footer-col">
+                <h4>Follow</h4>
+                <p><a href="https://www.facebook.com/profile.php?id=100048133515510" target="_blank">Facebook</a></p>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            © 2026 Shenango Lodge. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // ===== NAVIGATION =====
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const mainNav = document.getElementById('mainNav');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Nav background on scroll
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > window.innerHeight * 0.5) {
+                mainNav.classList.add('scrolled');
+            } else {
+                mainNav.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
